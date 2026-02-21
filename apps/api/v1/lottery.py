@@ -1,4 +1,4 @@
-from rest_framework import generics
+from rest_framework import generics, permissions
 
 from apps.api.serializers import LotterySerializer
 from apps.lottery.models import Lottery
@@ -6,4 +6,5 @@ from apps.lottery.models import Lottery
 
 class LotteryListView(generics.ListAPIView):
     serializer_class = LotterySerializer
-    queryset = Lottery.objects.all()
+    permission_classes = [permissions.AllowAny]
+    queryset = Lottery.objects.exclude(status=Lottery.Status.DRAFT)
