@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from apps.lottery.models import Ballot, Lottery
+from apps.lottery.models import Ballot, Lottery, Winner
 
 User = get_user_model()
 
@@ -52,3 +52,9 @@ def draft_lottery(db):
 @pytest.fixture
 def ballot(active_lottery, user):
     return Ballot.objects.create(lottery=active_lottery, participant=user)
+
+
+@pytest.fixture
+def winner(finished_lottery, user):
+    ballot = Ballot.objects.create(lottery=finished_lottery, participant=user)
+    return Winner.objects.create(lottery=finished_lottery, ballot=ballot, participant=user)

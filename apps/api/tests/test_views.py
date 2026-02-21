@@ -1,3 +1,5 @@
+from datetime import date
+
 import pytest
 
 from apps.lottery.models import Ballot
@@ -72,3 +74,22 @@ class TestBallotViews:
     def test_ballot_on_finished_lottery(self, auth_client, finished_lottery):
         resp = auth_client.post("/api/v1/ballots/", {"lottery": finished_lottery.id})
         assert resp.status_code == 400
+
+
+@pytest.mark.django_db
+class TestWinnerViews:
+    def test_list_winners_unauthenticated(self, auth_client, winner):
+        resp = auth_client.get("/api/v1/winners/")
+        assert resp.status_code == 200
+        assert len(resp.data) == 1
+
+    def test_filter_winners_by_date(self, auth_client, winner):
+        today = date.today().isoformat()
+        resp = auth_client.get(f"/api/v1/winners/?date={today}")
+        assert resp.status_code == 200
+        assert len(resp.data) == 1
+
+    def test_filter_winners_by_date_no_results(self, auth_client, winner):
+        resp = auth_client.get("/api/v1/winners/?date=2000-01-01")
+        assert resp.status_code == 200
+        assert len(resp.data) == 0
