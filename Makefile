@@ -1,4 +1,19 @@
-.PHONY: tests lint format migrate collectstatic createsuperuser db_and_redis load_test_data setup_periodic_tasks draw_winner
+.PHONY: tests lint format migrate collectstatic createsuperuser db_and_redis load_test_data setup_periodic_tasks draw_winner quick_start
+
+quick_start:
+	@if [ ! -f .env.docker ]; then \
+		echo "Creating .env.docker from .env.docker.example..."; \
+		cp .env.docker.example .env.docker; \
+	fi
+	docker compose --env-file .env.docker up --build -d
+	$(MAKE) migrate
+	$(MAKE) setup_periodic_tasks
+	$(MAKE) load_test_data
+	@echo ""
+	@echo "Service is ready!"
+	@echo "  http://localhost:8000"
+	@echo "  Admin: http://localhost:8000/admin/ (admin / admin)"
+	@echo "  Participants: alice, bob, charlie (password: password123)"
 
 tests:
 	poetry install --no-root --no-interaction

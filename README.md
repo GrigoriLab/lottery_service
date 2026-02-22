@@ -24,39 +24,30 @@ cp .env.docker.example .env.docker
 
 ## Quick Start (Docker)
 
-1. Start all services:
-
 ```bash
-docker compose --env-file .env.docker up --build
+make quick_start
 ```
 
-This starts PostgreSQL, Redis, the lottery service, celery worker, and celery beat.
+This will:
+1. Create `.env.docker` from the example if it doesn't exist
+2. Build and start all services (PostgreSQL, Redis, lottery service, celery worker, celery beat)
+3. Run migrations
+4. Set up periodic tasks
+5. Load test data (superuser, participants, sample lotteries)
 
-2. Run migrations:
+The service is available at http://localhost:8000. Django admin is at http://localhost:8000/admin/ (admin / admin).
+
+### Manual setup
+
+If you prefer to run each step individually:
 
 ```bash
+cp .env.docker.example .env.docker
+docker compose --env-file .env.docker up --build -d
 make migrate
-```
-
-3. Create a superuser for Django admin:
-
-```bash
-make createsuperuser
-```
-
-4. Set up periodic tasks:
-
-```bash
 make setup_periodic_tasks
-```
-
-5. Load test data:
-
-```bash
 make load_test_data
 ```
-
-The service is available at http://localhost:8000. Django admin is at http://localhost:8000/admin/.
 
 ## Local Development
 
