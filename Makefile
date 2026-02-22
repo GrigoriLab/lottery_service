@@ -16,6 +16,7 @@ quick_start:
 	@echo "  Participants: alice, bob, charlie (password: password123)"
 
 tests:
+	$(MAKE) db_and_redis
 	poetry install --no-root --no-interaction
 	poetry run pytest -v
 
