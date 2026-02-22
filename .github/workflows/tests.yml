@@ -1,0 +1,36 @@
+name: Tests
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Start DB and Redis
+        run: make db_and_redis
+        env:
+          POSTGRES_DB: lottery
+          POSTGRES_USER: lottery
+          POSTGRES_PASSWORD: lottery
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install Poetry
+        run: pip install poetry
+
+      - name: Run tests
+        run: make tests
+        env:
+          DATABASE_URL: postgres://lottery:lottery@localhost:5438/lottery
+          REDIS_HOST: localhost
+          REDIS_PORT: 6380
