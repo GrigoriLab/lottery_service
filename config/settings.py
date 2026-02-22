@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "apps.lottery",
     "apps.api",
     "django_celery_beat",
+    "drf_yasg",
 ]
 
 MIDDLEWARE = [
