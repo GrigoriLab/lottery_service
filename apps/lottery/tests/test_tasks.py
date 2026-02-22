@@ -51,6 +51,31 @@ class TestCloseLotteryWithBallots:
 
 
 @pytest.mark.django_db
+class TestCloseLotteryIdempotency:
+    def test_running_draw_twice_does_not_overwrite_winner(self, active_lottery, ballot):
+        close_lottery()
+        winner = Winner.objects.get(lottery=active_lottery)
+        original_winner_id = winner.id
+
+        result = close_lottery()
+        assert result == []
+        assert Winner.objects.count() == 1
+        assert Winner.objects.get(lottery=active_lottery).id == original_winner_id
+
+    def test_running_draw_twice_does_not_duplicate_winners(self, user, db):
+        lottery1 = Lottery.objects.create(status=Lottery.Status.ACTIVE, expires_at=timezone.now() + timedelta(days=1))
+        lottery2 = Lottery.objects.create(status=Lottery.Status.ACTIVE, expires_at=timezone.now() + timedelta(days=1))
+        Ballot.objects.create(lottery=lottery1, participant=user)
+        Ballot.objects.create(lottery=lottery2, participant=user)
+
+        close_lottery()
+        assert Winner.objects.count() == 2
+
+        close_lottery()
+        assert Winner.objects.count() == 2
+
+
+@pytest.mark.django_db
 class TestCloseLotteryWithoutBallots:
     def test_closes_lottery_without_ballots(self, active_lottery):
         result = close_lottery()

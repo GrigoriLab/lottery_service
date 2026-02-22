@@ -23,6 +23,17 @@ class TestRegisterView:
         )
         assert resp.status_code == 400
 
+    def test_register_short_password(self, api_client):
+        resp = api_client.post(
+            "/api/v1/auth/register/",
+            {"username": "newuser", "email": "new@example.com", "password": "short"},
+        )
+        assert resp.status_code == 400
+
+    def test_register_missing_fields(self, api_client):
+        resp = api_client.post("/api/v1/auth/register/", {})
+        assert resp.status_code == 400
+
 
 @pytest.mark.django_db
 class TestTokenViews:
@@ -76,10 +87,26 @@ class TestBallotViews:
         resp = auth_client.post("/api/v1/ballots/", {"lottery": finished_lottery.id})
         assert resp.status_code == 400
 
+    def test_ballot_on_draft_lottery(self, auth_client, draft_lottery):
+        resp = auth_client.post("/api/v1/ballots/", {"lottery": draft_lottery.id})
+        assert resp.status_code == 400
+
+    def test_ballot_missing_lottery(self, auth_client):
+        resp = auth_client.post("/api/v1/ballots/", {})
+        assert resp.status_code == 400
+
+    def test_ballot_nonexistent_lottery(self, auth_client):
+        resp = auth_client.post("/api/v1/ballots/", {"lottery": 9999})
+        assert resp.status_code == 400
+
 
 @pytest.mark.django_db
 class TestWinnerViews:
-    def test_list_winners_unauthenticated(self, auth_client, winner):
+    def test_list_winners_requires_auth(self, api_client):
+        resp = api_client.get("/api/v1/winners/")
+        assert resp.status_code == 401
+
+    def test_list_winners(self, auth_client, winner):
         resp = auth_client.get("/api/v1/winners/")
         assert resp.status_code == 200
         assert len(resp.data) == 1
