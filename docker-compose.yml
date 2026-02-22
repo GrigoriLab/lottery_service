@@ -29,6 +29,20 @@ services:
     ports:
       - 6380:6379
 
+  lottery_service:
+    build: .
+    ports:
+      - 8000:8000
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
   celery_worker:
     build: .
     command: celery -A config worker -l info
