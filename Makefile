@@ -1,4 +1,4 @@
-.PHONY: tests lint format migrate collectstatic createsuperuser db_and_redis load_test_data setup_periodic_tasks
+.PHONY: tests lint format migrate collectstatic createsuperuser db_and_redis load_test_data setup_periodic_tasks draw_winner
 
 tests:
 	poetry install --no-root --no-interaction
@@ -21,6 +21,9 @@ createsuperuser:
 
 load_test_data:
 	docker compose --env-file .env.docker exec lottery_service python manage.py create_test_data
+
+draw_winner:
+	docker compose --env-file .env.docker exec lottery_service python manage.py draw_winner
 
 setup_periodic_tasks:
 	docker compose --env-file .env.docker exec lottery_service python manage.py setup_periodic_tasks
