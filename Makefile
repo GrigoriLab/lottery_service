@@ -1,4 +1,4 @@
-.PHONY: tests lint format migrate collectstatic
+.PHONY: tests lint format migrate collectstatic createsuperuser
 
 tests:
 	poetry install --no-root --no-interaction
@@ -18,3 +18,6 @@ migrate:
 
 collectstatic:
 	poetry run python manage.py collectstatic --no-input
+
+createsuperuser:
+	docker compose --env-file .env.docker exec lottery_service python manage.py createsuperuser

@@ -13,6 +13,9 @@ RUN poetry install --no-root --only main --no-interaction
 
 COPY . .
 
+ENV DJANGO_SETTINGS_MODULE=config.settings
+RUN DATABASE_URL=sqlite:///dev python manage.py collectstatic --no-input
+
 EXPOSE 8000
 
 CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]
