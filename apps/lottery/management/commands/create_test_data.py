@@ -51,38 +51,20 @@ class Command(BaseCommand):
         now = timezone.now()
         alice, bob, charlie = users
 
-        finished_lottery, created = Lottery.objects.get_or_create(
-            id=1,
-            defaults={"status": Lottery.Status.FINISHED, "expires_at": now - timedelta(days=1)},
-        )
-        if created:
-            b1 = Ballot.objects.create(lottery=finished_lottery, participant=alice)
-            Ballot.objects.create(lottery=finished_lottery, participant=bob)
-            Winner.objects.create(lottery=finished_lottery, ballot=b1, participant=alice)
-            self.stdout.write(self.style.SUCCESS("Created finished lottery (winner: alice)"))
-        else:
-            self.stdout.write("Finished lottery already exists, skipping")
+        finished_lottery = Lottery.objects.create(status=Lottery.Status.FINISHED, expires_at=now - timedelta(days=1))
+        b1 = Ballot.objects.create(lottery=finished_lottery, participant=alice)
+        Ballot.objects.create(lottery=finished_lottery, participant=bob)
+        Winner.objects.create(lottery=finished_lottery, ballot=b1, participant=alice)
+        self.stdout.write(self.style.SUCCESS("Created finished lottery (winner: alice)"))
 
-        active_lottery, created = Lottery.objects.get_or_create(
-            id=2,
-            defaults={"status": Lottery.Status.ACTIVE, "expires_at": now + timedelta(hours=1)},
-        )
-        if created:
-            Ballot.objects.create(lottery=active_lottery, participant=bob)
-            Ballot.objects.create(lottery=active_lottery, participant=charlie)
-            Ballot.objects.create(lottery=active_lottery, participant=alice)
-            self.stdout.write(self.style.SUCCESS("Created active lottery with 3 ballots"))
-        else:
-            self.stdout.write("Active lottery already exists, skipping")
+        active_lottery = Lottery.objects.create(status=Lottery.Status.ACTIVE, expires_at=now + timedelta(hours=1))
+        Ballot.objects.create(lottery=active_lottery, participant=bob)
+        Ballot.objects.create(lottery=active_lottery, participant=charlie)
+        Ballot.objects.create(lottery=active_lottery, participant=alice)
+        self.stdout.write(self.style.SUCCESS("Created active lottery with 3 ballots"))
 
-        _, created = Lottery.objects.get_or_create(
-            id=3,
-            defaults={"status": Lottery.Status.DRAFT, "expires_at": now + timedelta(days=7)},
-        )
-        if created:
-            self.stdout.write(self.style.SUCCESS("Created draft lottery"))
-        else:
-            self.stdout.write("Draft lottery already exists, skipping")
+        Lottery.objects.create(status=Lottery.Status.DRAFT, expires_at=now + timedelta(days=7))
+        self.stdout.write(self.style.SUCCESS("Created draft lottery"))
 
         self.stdout.write(self.style.SUCCESS("\nDone! Test data summary:"))
         self.stdout.write(f"Superuser: {SUPERUSER_USERNAME} / {SUPERUSER_PASSWORD}")
