@@ -143,3 +143,4 @@ CELERY_TIMEZONE = "UTC"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+SWAGGER_USE_COMPAT_RENDERERS = False

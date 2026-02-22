@@ -1,4 +1,4 @@
-.PHONY: tests lint format migrate collectstatic createsuperuser db_and_redis load_test_data setup_periodic_tasks draw_winner quick_start
+.PHONY: tests lint format migrate collectstatic createsuperuser db_and_redis load_test_data setup_periodic_tasks draw_winner quick_start coverage
 
 quick_start:
 	@if [ ! -f .env.docker ]; then \
@@ -18,6 +18,10 @@ quick_start:
 tests:
 	poetry install --no-root --no-interaction
 	poetry run pytest -v
+
+coverage:
+	poetry install --no-root --no-interaction
+	poetry run pytest --cov=apps --cov-report=term-missing -v
 
 lint:
 	poetry install --no-root --no-interaction
