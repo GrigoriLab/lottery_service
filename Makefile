@@ -21,7 +21,7 @@ tests:
 
 coverage:
 	poetry install --no-root --no-interaction
-	poetry run pytest --cov=apps --cov-report=term-missing -v
+	poetry run pytest --cov=apps --cov-report=term-missing --cov-fail-under=95 -v
 
 lint:
 	poetry install --no-root --no-interaction

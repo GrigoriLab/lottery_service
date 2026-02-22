@@ -46,7 +46,7 @@ jobs:
         run: pip install poetry
 
       - name: Run tests
-        run: make tests
+        run: make coverage
         env:
           DATABASE_URL: postgres://lottery:lottery@localhost:5438/lottery
           REDIS_HOST: localhost
