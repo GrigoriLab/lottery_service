@@ -20,7 +20,6 @@ class BallotCreateSerializer(serializers.ModelSerializer):
 
         return lottery
 
-
     def create(self, validated_data):
         request = self.context["request"]
         item = {

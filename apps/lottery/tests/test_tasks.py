@@ -66,11 +66,10 @@ class TestCloseLotteryWithoutBallots:
 @pytest.mark.django_db
 class TestCloseLotteryMultiple:
     def test_closes_all_active_lotteries(self, db):
-        lottery1 = Lottery.objects.create(
-            status=Lottery.Status.ACTIVE, expires_at=timezone.now() + timedelta(days=1)
-        )
+        lottery1 = Lottery.objects.create(status=Lottery.Status.ACTIVE, expires_at=timezone.now() + timedelta(days=1))
         lottery2 = Lottery.objects.create(
-            status=Lottery.Status.ACTIVE, expires_at=timezone.now() + timedelta(days=2)
+            status=Lottery.Status.ACTIVE,
+            expires_at=timezone.now() + timedelta(days=2),
             # TODO: should we clause all lotteries or just expired ones?
         )
 
@@ -83,12 +82,8 @@ class TestCloseLotteryMultiple:
         assert lottery2.status == Lottery.Status.FINISHED
 
     def test_creates_winners_for_each_lottery_with_ballots(self, user, db):
-        lottery1 = Lottery.objects.create(
-            status=Lottery.Status.ACTIVE, expires_at=timezone.now() + timedelta(days=1)
-        )
-        lottery2 = Lottery.objects.create(
-            status=Lottery.Status.ACTIVE, expires_at=timezone.now() + timedelta(days=2)
-        )
+        lottery1 = Lottery.objects.create(status=Lottery.Status.ACTIVE, expires_at=timezone.now() + timedelta(days=1))
+        lottery2 = Lottery.objects.create(status=Lottery.Status.ACTIVE, expires_at=timezone.now() + timedelta(days=2))
         Ballot.objects.create(lottery=lottery1, participant=user)
         Ballot.objects.create(lottery=lottery2, participant=user)
 
@@ -99,15 +94,9 @@ class TestCloseLotteryMultiple:
         assert Winner.objects.filter(lottery=lottery2).exists()
 
     def test_mixed_lotteries_only_closes_active(self, user, db):
-        active = Lottery.objects.create(
-            status=Lottery.Status.ACTIVE, expires_at=timezone.now() + timedelta(days=1)
-        )
-        draft = Lottery.objects.create(
-            status=Lottery.Status.DRAFT, expires_at=timezone.now() + timedelta(days=1)
-        )
-        finished = Lottery.objects.create(
-            status=Lottery.Status.FINISHED, expires_at=timezone.now() - timedelta(days=1)
-        )
+        active = Lottery.objects.create(status=Lottery.Status.ACTIVE, expires_at=timezone.now() + timedelta(days=1))
+        draft = Lottery.objects.create(status=Lottery.Status.DRAFT, expires_at=timezone.now() + timedelta(days=1))
+        finished = Lottery.objects.create(status=Lottery.Status.FINISHED, expires_at=timezone.now() - timedelta(days=1))
         Ballot.objects.create(lottery=active, participant=user)
 
         result = close_lottery()

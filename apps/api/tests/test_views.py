@@ -8,7 +8,8 @@ from apps.lottery.models import Ballot
 @pytest.mark.django_db
 class TestRegisterView:
     def test_register(self, api_client):
-        resp = api_client.post("/api/v1/auth/register/",
+        resp = api_client.post(
+            "/api/v1/auth/register/",
             {"username": "newuser", "email": "new@example.com", "password": "secure_password"},
         )
         assert resp.status_code == 201

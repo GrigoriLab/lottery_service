@@ -1,6 +1,6 @@
 from rest_framework import generics, permissions
 
-from apps.api.serializers import BallotSerializer, BallotCreateSerializer
+from apps.api.serializers import BallotCreateSerializer, BallotSerializer
 from apps.lottery.models import Ballot
 
 

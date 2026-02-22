@@ -1,11 +1,10 @@
 from django.urls import include, path
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 from apps.api.v1.ballot import BallotListCreateView
 from apps.api.v1.lottery import LotteryListView
-from apps.api.v1.winner import WinnerListView
-from rest_framework_simplejwt.views import TokenObtainPairView
-
 from apps.api.v1.register import RegisterView
+from apps.api.v1.winner import WinnerListView
 
 apipatterns_v1 = [
     path("lotteries/", LotteryListView.as_view(), name="lotteries"),

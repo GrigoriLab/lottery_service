@@ -13,9 +13,7 @@ User = get_user_model()
 
 @pytest.fixture
 def user(db):
-    return User.objects.create_user(
-        username="testuser", email="test@example.com", password="secure_password"
-    )
+    return User.objects.create_user(username="testuser", email="test@example.com", password="secure_password")
 
 
 @pytest.fixture
@@ -38,16 +36,12 @@ def active_lottery(db):
 
 @pytest.fixture
 def finished_lottery(db):
-    return Lottery.objects.create(
-        status=Lottery.Status.FINISHED, expires_at=timezone.now() - timedelta(days=1)
-    )
+    return Lottery.objects.create(status=Lottery.Status.FINISHED, expires_at=timezone.now() - timedelta(days=1))
 
 
 @pytest.fixture
 def draft_lottery(db):
-    return Lottery.objects.create(
-        status=Lottery.Status.DRAFT, expires_at=timezone.now() + timedelta(days=1)
-    )
+    return Lottery.objects.create(status=Lottery.Status.DRAFT, expires_at=timezone.now() + timedelta(days=1))
 
 
 @pytest.fixture

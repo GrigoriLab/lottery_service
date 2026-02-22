@@ -1,4 +1,5 @@
 import logging
+
 from config import celery_app
 
 logger = logging.getLogger(__name__)
@@ -10,7 +11,7 @@ def close_lottery(**kwargs):
 
     active_lotteries = Lottery.objects.filter(status=Lottery.Status.ACTIVE)
     if not active_lotteries.exists():
-        logger.info(f"No active lottery")
+        logger.info("No active lottery")
 
     closed_ids = []
 

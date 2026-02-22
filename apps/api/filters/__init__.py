@@ -1,1 +1,1 @@
-from .winner import WinnerFilter
+from .winner import WinnerFilter as WinnerFilter
