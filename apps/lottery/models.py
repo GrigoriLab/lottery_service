@@ -16,6 +16,9 @@ class Lottery(models.Model):
         ordering = ["-created_at"]
         verbose_name_plural = "lotteries"
 
+    def __str__(self):
+        return f"Lottery {self.id} ({self.status})"
+
 
 class Ballot(models.Model):
     lottery = models.ForeignKey("lottery.Lottery", on_delete=models.CASCADE, related_name="ballots")
@@ -25,9 +28,15 @@ class Ballot(models.Model):
     class Meta:
         ordering = ["-submitted_at"]
 
+    def __str__(self):
+        return f"Ballot by {self.participant}(lottery={self.lottery.id})"
+
 
 class Winner(models.Model):
     lottery = models.OneToOneField(Lottery, on_delete=models.CASCADE, related_name="winner")
     ballot = models.OneToOneField(Ballot, on_delete=models.CASCADE, related_name="winning_ballot")
     participant = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="wins")
     selected_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Winner: {self.participant} for {self.lottery.id} lottery"
