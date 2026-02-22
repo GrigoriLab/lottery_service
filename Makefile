@@ -1,4 +1,5 @@
 .PHONY: tests
 
 tests:
-	python -m pytest -v
+	poetry install --no-root --no-interaction
+	poetry run pytest -v

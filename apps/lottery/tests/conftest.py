@@ -1,7 +1,8 @@
-from datetime import date, timedelta
+from datetime import timedelta
 
 import pytest
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 
 from apps.lottery.models import Ballot, Lottery
 
@@ -25,21 +26,21 @@ def second_user(db):
 @pytest.fixture
 def active_lottery(db):
     return Lottery.objects.create(
-        status=Lottery.Status.ACTIVE, expires_at=date.today() + timedelta(days=1)
+        status=Lottery.Status.ACTIVE, expires_at=timezone.now() + timedelta(days=1)
     )
 
 
 @pytest.fixture
 def finished_lottery(db):
     return Lottery.objects.create(
-        status=Lottery.Status.FINISHED, expires_at=date.today() - timedelta(days=1)
+        status=Lottery.Status.FINISHED, expires_at=timezone.now() - timedelta(days=1)
     )
 
 
 @pytest.fixture
 def draft_lottery(db):
     return Lottery.objects.create(
-        status=Lottery.Status.DRAFT, expires_at=date.today() + timedelta(days=1)
+        status=Lottery.Status.DRAFT, expires_at=timezone.now() + timedelta(days=1)
     )
 
 
