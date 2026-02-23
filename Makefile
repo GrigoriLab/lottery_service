@@ -1,4 +1,4 @@
-.PHONY: tests lint format migrate collectstatic createsuperuser db_and_redis load_test_data setup_periodic_tasks draw_winner quick_start coverage
+.PHONY: tests lint format migrate collectstatic createsuperuser db_and_redis load_test_data setup_periodic_tasks draw_winner quick_start coverage create_lottery submit_ballot
 
 quick_start:
 	@if [ ! -f .env.docker ]; then \
@@ -41,6 +41,12 @@ createsuperuser:
 
 load_test_data:
 	docker compose --env-file .env.docker exec lottery_service python manage.py create_test_data
+
+create_lottery:
+	docker compose --env-file .env.docker exec lottery_service python manage.py create_lottery
+
+submit_ballot:
+	docker compose --env-file .env.docker exec lottery_service python manage.py submit_ballot $(user) $(lottery)
 
 draw_winner:
 	docker compose --env-file .env.docker exec lottery_service python manage.py draw_winner

@@ -109,17 +109,33 @@ curl http://localhost:8000/api/v1/lotteries/
 
 ### Create lottery
 
-Lotteries are created through the Django admin panel at http://localhost:8000/admin/.
+Via Django admin at http://localhost:8000/admin/, or via the command line:
+
+```bash
+make create_lottery
+```
 
 ### Submit a ballot
 
-Requires authentication. Submit a ballot for an active lottery:
+Via the API (requires authentication):
 
 ```bash
 curl -X POST http://localhost:8000/api/v1/ballots/ \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer <access_token>" \
   -d '{"lottery": 1}'
+```
+
+Or via the command line:
+
+```bash
+make submit_ballot user=alice lottery=1
+```
+
+### Draw winner
+
+```bash
+make draw_winner
 ```
 
 ### Check winners
